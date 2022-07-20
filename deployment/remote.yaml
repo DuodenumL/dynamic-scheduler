@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aio-remote-config
+  namespace: aio-test
+data:
+  scheduler-config.yaml: |
+    apiVersion: kubescheduler.config.k8s.io/v1beta1
+    kind: KubeSchedulerConfiguration
+    leaderElection:
+      leaderElect: true
+      resourceNamespace: aio-test
+      resourceName: aio-scheduler
+    profiles:
+      - schedulerName: aio-scheduler
+        plugins:
+          #queueSort:
+          #  enabled:
+          #    - name: "AllInOne"
+          preFilter:
+            enabled:
+              - name: "AllInOne"
+          postFilter:
+            enabled:
+              - name: "AllInOne"
+          preScore:
+            enabled:
+              - name: "AllInOne"
+          score:
+            enabled:
+              - name: "AllInOne"
+                weight: 1
+          reserve:
+            enabled:
+              - name: "AllInOne"
+          permit:
+            enabled:
+              - name: "AllInOne"
+          postBind:
+            enabled:
+              - name: "AllInOne"
+        pluginConfig:
+          - name: "AllInOne"
+            args:
+              # todo
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aio-remote-scheduler
+  namespace: aio-test
+  labels:
+    component: aio-remote-scheduler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: aio-remote-scheduler
+  template:
+    metadata:
+      labels:
+        component: aio-remote-scheduler
+    spec:
+      serviceAccount: aio-sa
+      priorityClassName: system-cluster-critical
+      volumes:
+        - name: scheduler-config
+          configMap:
+            name: aio-remote-config
+      containers:
+        - name: scheduler-ctrl
+          image: aio-scheduler:0.1
+          imagePullPolicy: IfNotPresent
+          args:
+            - aio-scheduler
+            - --config=/etc/kubernetes/scheduler-config.yaml
+            - --v=4
+          resources:
+            requests:
+              cpu: "50m"
+          volumeMounts:
+            - name: scheduler-config
+              mountPath: /etc/kubernetes

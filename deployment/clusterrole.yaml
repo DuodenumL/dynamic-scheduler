@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: aio-sa
+  namespace: aio-test
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: aio-clusterrolebinding
+  namespace: aio-test
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: aio-admin
+subjects:
+  - kind: ServiceAccount
+    name: aio-sa
+    namespace: aio-test
+
+---

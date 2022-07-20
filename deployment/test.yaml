@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aiotest
+  namespace: aio-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aiotest
+  template:
+    metadata:
+      labels:
+        app: aiotest
+    spec:
+      schedulerName: aio-scheduler
+      containers:
+        - image: nginx
+          imagePullPolicy: IfNotPresent
+          name: nginx
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: 200m
+            requests:
+              cpu: 200m
