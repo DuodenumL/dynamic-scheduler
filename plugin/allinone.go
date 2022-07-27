@@ -95,7 +95,7 @@ func (a *AllInOnePlugin) Reserve(ctx context.Context, state *framework.CycleStat
 
 func (a *AllInOnePlugin) Permit(ctx context.Context, state *framework.CycleState, p *v1.Pod, nodeName string) (*framework.Status, time.Duration) {
 	klog.V(4).Infof("permit: %+v, %+v", p.Name, nodeName)
-	return nil, 0
+	return framework.NewStatus(framework.Success, ""), 0
 }
 
 func (a *AllInOnePlugin) Unreserve(ctx context.Context, state *framework.CycleState, p *v1.Pod, nodeName string) {
