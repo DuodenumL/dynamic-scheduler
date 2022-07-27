@@ -42,22 +42,22 @@ func (a *AllInOnePlugin) PreFilterExtensions() framework.PreFilterExtensions {
 }
 
 func (a *AllInOnePlugin) Filter(ctx context.Context, state *framework.CycleState, pod *v1.Pod, nodeInfo *framework.NodeInfo) *framework.Status {
-	klog.V(4).Infof("filter: %+v, %+v", pod, nodeInfo)
+	klog.V(4).Infof("filter: %+v, %+v", pod.Name, nodeInfo)
 	return nil
 }
 
 func (a *AllInOnePlugin) PostFilter(ctx context.Context, state *framework.CycleState, pod *v1.Pod, filteredNodeStatusMap framework.NodeToStatusMap) (*framework.PostFilterResult, *framework.Status) {
-	klog.V(4).Infof("postfilter: %+v, %+v", pod, filteredNodeStatusMap)
+	klog.V(4).Infof("postfilter: %+v, %+v", pod.Name, filteredNodeStatusMap)
 	return nil, nil
 }
 
 func (a *AllInOnePlugin) PreScore(ctx context.Context, state *framework.CycleState, pod *v1.Pod, nodes []*v1.Node) *framework.Status {
-	klog.V(4).Infof("prescore: %+v, %+v", pod, nodes)
+	klog.V(4).Infof("prescore: %+v, %+v", pod.Name, nodes)
 	return nil
 }
 
 func (a *AllInOnePlugin) Score(ctx context.Context, state *framework.CycleState, p *v1.Pod, nodeName string) (int64, *framework.Status) {
-	klog.V(4).Infof("score: %+v, %+v", p, nodeName)
+	klog.V(4).Infof("score: %+v, %+v", p.Name, nodeName)
 	return int64(len(nodeName)), nil
 }
 
@@ -66,7 +66,7 @@ func (a *AllInOnePlugin) ScoreExtensions() framework.ScoreExtensions {
 }
 
 func (a *AllInOnePlugin) NormalizeScore(ctx context.Context, state *framework.CycleState, p *v1.Pod, scores framework.NodeScoreList) *framework.Status {
-	klog.V(4).Infof("normalize score: %+v, %+v", p, scores)
+	klog.V(4).Infof("normalize score: %+v, %+v", p.Name, scores)
 	maxScore := Max[int64](0, Map(scores, func(score framework.NodeScore) int64 { return score.Score })...)
 	for i := range scores {
 		scores[i].Score = int64(float64(scores[i].Score) / float64(maxScore) * float64(framework.MaxNodeScore))
@@ -75,29 +75,29 @@ func (a *AllInOnePlugin) NormalizeScore(ctx context.Context, state *framework.Cy
 }
 
 func (a *AllInOnePlugin) PreBind(ctx context.Context, state *framework.CycleState, p *v1.Pod, nodeName string) *framework.Status {
-	klog.V(4).Infof("prebind: %+v, %+v", p, nodeName)
+	klog.V(4).Infof("prebind: %+v, %+v", p.Name, nodeName)
 	return nil
 }
 
 func (a *AllInOnePlugin) Bind(ctx context.Context, state *framework.CycleState, p *v1.Pod, nodeName string) *framework.Status {
-	klog.V(4).Infof("bind: %+v, %+v", p, nodeName)
+	klog.V(4).Infof("bind: %+v, %+v", p.Name, nodeName)
 	return nil
 }
 
 func (a *AllInOnePlugin) PostBind(ctx context.Context, state *framework.CycleState, p *v1.Pod, nodeName string) {
-	klog.V(4).Infof("postbind: %+v, %+v", p, nodeName)
+	klog.V(4).Infof("postbind: %+v, %+v", p.Name, nodeName)
 }
 
 func (a *AllInOnePlugin) Reserve(ctx context.Context, state *framework.CycleState, p *v1.Pod, nodeName string) *framework.Status {
-	klog.V(4).Infof("reserve: %+v, %+v", p, nodeName)
+	klog.V(4).Infof("reserve: %+v, %+v", p.Name, nodeName)
 	return nil
 }
 
 func (a *AllInOnePlugin) Permit(ctx context.Context, state *framework.CycleState, p *v1.Pod, nodeName string) (*framework.Status, time.Duration) {
-	klog.V(4).Infof("permit: %+v, %+v", p, nodeName)
+	klog.V(4).Infof("permit: %+v, %+v", p.Name, nodeName)
 	return nil, 0
 }
 
 func (a *AllInOnePlugin) Unreserve(ctx context.Context, state *framework.CycleState, p *v1.Pod, nodeName string) {
-	klog.V(4).Infof("unreserve: %+v, %+v", p, nodeName)
+	klog.V(4).Infof("unreserve: %+v, %+v", p.Name, nodeName)
 }

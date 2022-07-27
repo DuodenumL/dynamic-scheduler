@@ -12,7 +12,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: aio-admin
+  name: cluster-admin
 subjects:
   - kind: ServiceAccount
     name: aio-sa
